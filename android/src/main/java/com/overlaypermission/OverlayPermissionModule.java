@@ -1,8 +1,6 @@
 
 package com.overlaypermission;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -15,12 +13,10 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableArray;
-
-import java.util.ArrayList;
 
 public class OverlayPermissionModule extends ReactContextBaseJavaModule {
+
+    private PTTFloatingButtonJava pttButton = null;
 
     private final ReactApplicationContext reactContext;
     public OverlayPermissionModule(ReactApplicationContext reactContext) {
@@ -60,6 +56,28 @@ public class OverlayPermissionModule extends ReactContextBaseJavaModule {
     public void isRequestOverlayPermissionGranted(Callback booleanCallback) {
         boolean equal=!Settings.canDrawOverlays(this.reactContext);
         booleanCallback.invoke(equal);
+    }
+
+    @ReactMethod
+    public void showOverlayButton() {
+        if (pttButton == null) {
+            pttButton = new PTTFloatingButtonJava(reactContext);
+        }
+        pttButton.enableOverlay();
+    }
+
+    @ReactMethod
+    public void removeOverlayButton() {
+        if (pttButton != null && pttButton.isView()) {
+            pttButton.removeOverlay();
+        }
+    }
+
+    @ReactMethod
+    public void setStatus(Boolean active, String statusText) {
+        if (pttButton != null && pttButton.isView()) {
+            pttButton.setStatus(active, statusText);
+        }
     }
 
 }
