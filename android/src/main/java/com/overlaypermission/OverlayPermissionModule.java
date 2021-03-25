@@ -63,7 +63,10 @@ public class OverlayPermissionModule extends ReactContextBaseJavaModule {
         if (pttButton == null) {
             pttButton = new PTTFloatingButtonJava(reactContext);
         }
-        pttButton.enableOverlay();
+        if (!pttButton.isView()) {
+            pttButton.enableOverlay();
+        }
+        pttButton.setStatus(true, "");
     }
 
     @ReactMethod

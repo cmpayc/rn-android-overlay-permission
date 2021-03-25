@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
-
     <RelativeLayout
         android:id="@+id/rl_controls_container"
         android:layout_width="wrap_content"
@@ -12,8 +10,8 @@
         android:paddingRight="60dp"
         android:paddingLeft="60dp"
         android:visibility="gone"
+        android:layout_alignParentRight="true"
         tools:visibility="visible">
-
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
@@ -24,17 +22,14 @@
             android:layout_centerVertical="true"
             android:textSize="16sp"
             android:layout_marginEnd="20dp"/>
-
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Talking..."
+            android:text="Prepating..."
             android:layout_toEndOf="@id/btn_cancel"
             android:layout_centerVertical="true"/>
-
     </RelativeLayout>
-
     <ImageView
         android:id="@+id/iv_talk"
         android:layout_width="50dp"
@@ -42,7 +37,6 @@
         android:background="@drawable/talk_bcg"
         android:src="@drawable/ic_call_white"
         android:padding="12dp"
-        android:layout_gravity="center_vertical|end"/>
-
-
-</FrameLayout>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>

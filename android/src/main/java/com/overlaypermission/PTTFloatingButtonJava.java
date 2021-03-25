@@ -39,8 +39,6 @@ class PTTFloatingButtonJava {
     private Button btnCancel = null;
     private RelativeLayout rlControlsContainer = null;
 
-    private Boolean ivTalkSelected = false;
-
     private int lastY = 0;
 
     private View.OnTouchListener talkBtnTouchListener = new TalkBtnTouchListener();
@@ -110,9 +108,8 @@ class PTTFloatingButtonJava {
     }
 
     public void setStatus(Boolean active, String statusText) {
-        ivTalkSelected = active;
-        ivTalk.setSelected(ivTalkSelected);
-        rlControlsContainer.setVisibility(active ? View.VISIBLE : View.GONE);
+        ivTalk.setSelected(active);
+        rlControlsContainer.setVisibility(statusText.isEmpty() ? View.GONE : View.VISIBLE);
         tvStatus.setText(statusText);
     }
 
