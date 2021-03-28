@@ -47,7 +47,7 @@ class PTTFloatingButtonJava {
         this.context = context;
         windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
     }
-    
+
     public void enableOverlay() {
         if (floatingView != null) {
             removeOverlay();
@@ -76,6 +76,13 @@ class PTTFloatingButtonJava {
 
         ivTalk.setOnTouchListener(talkBtnTouchListener);
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTalkBtnReleased();
+            }
+        });
+
         Display display = windowManager.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -101,6 +108,7 @@ class PTTFloatingButtonJava {
     }
 
     public void onTalkBtnReleased() {
+        setStatus(false, "");
         WritableMap params = Arguments.createMap();
         params.putBoolean("pressed", false);
         context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -109,7 +117,10 @@ class PTTFloatingButtonJava {
 
     public void setStatus(Boolean active, String statusText) {
         ivTalk.setSelected(active);
-        rlControlsContainer.setVisibility(statusText.isEmpty() ? View.GONE : View.VISIBLE);
+        int newVisibility = statusText.isEmpty() ? View.GONE : View.VISIBLE;
+        if (rlControlsContainer.getVisibility() != newVisibility) {
+            rlControlsContainer.setVisibility(newVisibility);
+        }
         tvStatus.setText(statusText);
     }
 
@@ -136,20 +147,22 @@ class PTTFloatingButtonJava {
                     if (floatingViewLP != null) {
                         initialY = floatingViewLP.y;
                         initialTouchY = motionEvent.getRawY();
-                        touchDisposable = Observable.timer(400, TimeUnit.MILLISECONDS)
-                                .subscribeOn(AndroidSchedulers.mainThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .map(new Function<Long, Boolean>() {
-                                    @Override
-                                    public Boolean apply(Long str) throws Exception {
-                                        wasLongPressPerformed = true;
-                                        onTalkBtnPressed();
-                                        return true;
-                                    }
-                                })
-                                .subscribeOn(AndroidSchedulers.mainThread())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe();
+                        if (view.isSelected()) {
+                            touchDisposable = Observable.timer(400, TimeUnit.MILLISECONDS)
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .map(new Function<Long, Boolean>() {
+                                        @Override
+                                        public Boolean apply(Long str) throws Exception {
+                                            wasLongPressPerformed = true;
+                                            onTalkBtnPressed();
+                                            return true;
+                                        }
+                                    })
+                                    .subscribeOn(AndroidSchedulers.mainThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe();
+                        }
                     }
                     return true;
                 }
