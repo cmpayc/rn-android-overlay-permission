@@ -10,13 +10,13 @@
         android:layout_height="65dp"
         android:background="@android:color/white"
         android:paddingRight="60dp"
-        android:paddingLeft="60dp"
+        android:paddingLeft="20dp"
         android:visibility="gone"
         tools:visibility="visible">
 
         <Button
             android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="50dp"
             android:text="@android:string/cancel"
             android:textColor="@color/blue"
@@ -27,9 +27,10 @@
 
         <TextView
             android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Preparing"
+            android:gravity="center"
             android:layout_toEndOf="@id/btn_cancel"
             android:layout_centerVertical="true"/>
 

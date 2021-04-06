@@ -65,8 +65,8 @@ public class OverlayPermissionModule extends ReactContextBaseJavaModule {
         }
         if (!pttButton.isView()) {
             pttButton.enableOverlay();
+            pttButton.setStatus(true, "");
         }
-        pttButton.setStatus(true, "");
     }
 
     @ReactMethod
