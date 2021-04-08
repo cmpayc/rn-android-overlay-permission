@@ -1,8 +1,10 @@
 package com.overlaypermission;
 
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import static android.content.Context.WINDOW_SERVICE;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -27,6 +28,8 @@ import io.reactivex.functions.Function;
 
 import java.util.concurrent.TimeUnit;
 
+import android.media.AudioManager;
+
 class PTTFloatingButtonJava {
     // private Context context;
     private ReactApplicationContext context;
@@ -39,13 +42,17 @@ class PTTFloatingButtonJava {
     private Button btnCancel = null;
     private RelativeLayout rlControlsContainer = null;
 
+    private AudioManager audioManager;
+    private Thread audioThread = null;
+
     private int lastY = 0;
 
     private View.OnTouchListener talkBtnTouchListener = new TalkBtnTouchListener();
 
     public PTTFloatingButtonJava(ReactApplicationContext context) {
         this.context = context;
-        windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        audioManager = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE));
     }
 
     public void enableOverlay() {
@@ -61,7 +68,7 @@ class PTTFloatingButtonJava {
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     PixelFormat.TRANSLUCENT);
         } else {
-             floatingViewLP = new WindowManager.LayoutParams(
+            floatingViewLP = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.TYPE_PHONE,
@@ -79,6 +86,7 @@ class PTTFloatingButtonJava {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setAudioMode(audioManager.MODE_NORMAL);
                 onTalkBtnReleased();
             }
         });
@@ -128,6 +136,18 @@ class PTTFloatingButtonJava {
         return floatingView != null;
     }
 
+    private void setAudioMode(int mode) {
+        final int newMode = mode;
+        if (newMode != audioManager.getMode()) {
+            audioThread = new Thread(new Runnable() {
+                public void run() {
+                    audioManager.setMode(newMode);
+                }
+            }, "AudioManager Thread");
+            audioThread.start();
+        }
+    }
+
     public class TalkBtnTouchListener implements View.OnTouchListener {
 
         private float initialTouchY = 0f;
@@ -145,6 +165,7 @@ class PTTFloatingButtonJava {
             switch (motionEvent.getAction()) {
                 case (MotionEvent.ACTION_DOWN): {
                     if (floatingViewLP != null) {
+                        setAudioMode(audioManager.MODE_IN_COMMUNICATION);
                         initialY = floatingViewLP.y;
                         initialTouchY = motionEvent.getRawY();
                         if (view.isSelected()) {
@@ -167,6 +188,7 @@ class PTTFloatingButtonJava {
                     return true;
                 }
                 case (MotionEvent.ACTION_UP): {
+                    setAudioMode(audioManager.MODE_NORMAL);
                     if (touchDisposable != null) {
                         touchDisposable.dispose();
                         if (wasLongPressPerformed) {
