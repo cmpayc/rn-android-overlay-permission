@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.graphics.Color;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
@@ -37,8 +39,12 @@ class PTTFloatingButtonJava {
     private WindowManager windowManager;
     private WindowManager.LayoutParams floatingViewLP;
 
+    private FrameLayout flUser = null;
+    private FrameLayout flTalk = null;
     private ImageView ivTalk = null;
-    private TextView tvStatus= null;
+    private TextView tvUser = null;
+    private TextView tvStatus = null;
+    private TextView tvTalk = null;
     private Button btnCancel = null;
     private RelativeLayout rlControlsContainer = null;
 
@@ -76,12 +82,16 @@ class PTTFloatingButtonJava {
                     PixelFormat.TRANSLUCENT);
         }
 
+        flUser = floatingView.findViewById(R.id.fl_user);
+        flTalk = floatingView.findViewById(R.id.fl_talk);
         ivTalk = floatingView.findViewById(R.id.iv_talk);
+        tvUser = floatingView.findViewById(R.id.tv_user);
         tvStatus = floatingView.findViewById(R.id.tv_status);
+        tvTalk = floatingView.findViewById(R.id.tv_talk);
         btnCancel = floatingView.findViewById(R.id.btn_cancel);
         rlControlsContainer = floatingView.findViewById(R.id.rl_controls_container);
 
-        ivTalk.setOnTouchListener(talkBtnTouchListener);
+        flTalk.setOnTouchListener(talkBtnTouchListener);
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,18 +126,37 @@ class PTTFloatingButtonJava {
     }
 
     public void onTalkBtnReleased() {
-        setStatus(false, "");
+        setStatus(false, "", "");
         WritableMap params = Arguments.createMap();
         params.putBoolean("pressed", false);
         context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit("PttAction", params);
     }
 
-    public void setStatus(Boolean active, String statusText) {
-        ivTalk.setSelected(active);
+    public void setStatus(Boolean active, String statusText, String userText) {
+        flTalk.setSelected(active);
         int newVisibility = statusText.isEmpty() ? View.GONE : View.VISIBLE;
-        if (rlControlsContainer.getVisibility() != newVisibility) {
-            rlControlsContainer.setVisibility(newVisibility);
+        if (userText.isEmpty()) {
+            tvUser.setVisibility(View.GONE);
+            tvTalk.setVisibility(View.GONE);
+            ivTalk.setVisibility(View.VISIBLE);
+        } else {
+            tvUser.setText(userText);
+            tvUser.setVisibility(View.VISIBLE);
+            if (newVisibility == View.VISIBLE) {
+                tvTalk.setVisibility(View.GONE);
+                ivTalk.setVisibility(View.VISIBLE);
+            } else {
+                tvTalk.setText(userText);
+                tvTalk.setVisibility(View.VISIBLE);
+                ivTalk.setVisibility(View.GONE);
+            }
+        }
+        if (flUser.getVisibility() != newVisibility) {
+            flUser.setVisibility(newVisibility);
+            tvStatus.setVisibility(newVisibility);
+            btnCancel.setVisibility(newVisibility);
+            rlControlsContainer.setBackgroundColor(newVisibility == View.GONE ? Color.TRANSPARENT : Color.WHITE);
         }
         tvStatus.setText(statusText);
     }

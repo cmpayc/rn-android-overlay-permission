@@ -5,44 +5,98 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:id="@+id/rl_controls_container"
         android:layout_width="wrap_content"
         android:layout_height="65dp"
-        android:background="@android:color/white"
-        android:paddingRight="60dp"
-        android:paddingLeft="20dp"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="visible">
 
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:text="@android:string/cancel"
-            android:textColor="@color/blue"
-            android:background="@android:color/transparent"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:layout_marginEnd="20dp"/>
+        <FrameLayout
+            android:id="@+id/fl_user"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/bg_left">
 
-        <TextView
-            android:id="@+id/tv_status"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="Preparing"
-            android:gravity="center"
-            android:layout_toEndOf="@id/btn_cancel"
-            android:layout_centerVertical="true"/>
+            <TextView
+                android:id="@+id/tv_user"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_user"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"
+                android:textAllCaps="true"
+                android:text=""
+                android:visibility="gone"
+                tools:visibility="visible"/>
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_controls_container"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            tools:background="@android:color/white"
+            android:layout_toEndOf="@id/fl_user">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:text="@android:string/cancel"
+                android:textColor="@color/blue"
+                android:background="@android:color/transparent"
+                android:layout_centerVertical="true"
+                android:textSize="16dp"
+                android:layout_marginEnd="20dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Preparing"
+                android:gravity="center"
+                android:layout_toEndOf="@id/btn_cancel"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+            />
+
+            <FrameLayout
+                android:id="@+id/fl_talk"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/talk_bcg"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/tv_status">
+            <ImageView
+                android:id="@+id/iv_talk"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_call_white"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp" />
+            <TextView
+                android:id="@+id/tv_talk"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/bg_user"
+                android:layout_gravity="center|right"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"
+                android:textAllCaps="true"
+                android:text=""
+                android:visibility="gone"
+                tools:visibility="gone"/>
+            </FrameLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/iv_talk"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/talk_bcg"
-        android:src="@drawable/ic_call_white"
-        android:padding="12dp"
-        android:layout_gravity="center_vertical|end"/>
 
 </FrameLayout>

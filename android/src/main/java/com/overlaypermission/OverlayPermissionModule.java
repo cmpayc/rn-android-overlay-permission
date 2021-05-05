@@ -65,7 +65,7 @@ public class OverlayPermissionModule extends ReactContextBaseJavaModule {
         }
         if (!pttButton.isView()) {
             pttButton.enableOverlay();
-            pttButton.setStatus(true, "");
+            pttButton.setStatus(true, "", "");
         }
     }
 
@@ -77,9 +77,9 @@ public class OverlayPermissionModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setStatus(Boolean active, String statusText) {
+    public void setStatus(Boolean active, String statusText, String userText) {
         if (pttButton != null && pttButton.isView()) {
-            pttButton.setStatus(active, statusText);
+            pttButton.setStatus(active, statusText, userText);
         }
     }
 
